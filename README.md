@@ -15,3 +15,11 @@ cd [your kernel source directory]
 make module_prepare
 make modules_install INSTALL_MOD_PATH=../
 ```
+## Build RTL8188EUS driver/modules
+clone this driver repository:
+```
+cd ../
+git clone https://github.com/zexceed12300/rtl8188eus
+cd
+```
+That command places this driver behind your kernel source directory (RECOMMENDED). if you put it anywhere you might need to set the Makefile in this driver, but i won't explain it.
