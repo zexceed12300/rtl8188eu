@@ -141,11 +141,12 @@ int dbg_rtw_cfg80211_vendor_cmd_reply(struct sk_buff *skb
 
 struct sk_buff *rtw_cfg80211_vendor_event_alloc(
 	struct wiphy *wiphy, struct wireless_dev *wdev, int len, int event_id, gfp_t gfp)
+
 {
 	struct sk_buff *skb;
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 1, 0))
-	skb = cfg80211_vendor_event_alloc(wiphy, len, event_id, gfp);
+	skb = cfg80211_vendor_event_alloc(wiphy, wdev, len, event_id, gfp);
 #else
 	skb = cfg80211_vendor_event_alloc(wiphy, wdev, len, event_id, gfp);
 #endif
