@@ -1295,10 +1295,11 @@ static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb,
 #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 19, 0))
 static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb,
 			    struct net_device *sb_dev,
-			    select_queue_fallback_t fallback)
+			    struct select_queue_fallback_t *fallback)
 #else
 static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb,
-			    void *accel_priv, select_queue_fallback_t fallback)
+			    void *accel_priv, 
+			    struct select_queue_fallback_t *fallback)
 #endif
 {
 	_adapter	*padapter = rtw_netdev_priv(dev);
