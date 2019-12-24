@@ -21,7 +21,7 @@ clone this driver repository:
 ```
 cd ../
 git clone https://github.com/zexceed12300/rtl8188eus
-cd
+cd rtl8188eus
 ```
 That command places this driver behind your kernel source directory (RECOMMENDED). if you put it anywhere you might need to set the Makefile in this driver, but i won't explain it.
 
