@@ -1049,10 +1049,10 @@ SUBARCH := $(shell uname -m | sed -e "s/i.86/i386/; s/ppc/powerpc/; s/armv.l/arm
 ARCH ?= $(SUBARCH)
 CROSS_COMPILE ?= $(CROSS_COMPILE)
 KVER  := $(KBUILD_KVER)
-KSRC := ../lib/modules/$(KVER)/build
-MODDESTDIR := ../lib/modules/$(KVER)/build/drivers/net/wireless/
+KSRC := $(KLIB_BUILD)
+MODDESTDIR := /lib/modules/$(KVER)/build/drivers/net/wireless/
 INSTALL_PREFIX :=
-STAGINGMODDIR := ../lib/modules/$(KVER)/build/drivers/staging
+STAGINGMODDIR := /lib/modules/$(KVER)/build/drivers/staging
 endif
 
 ifeq ($(CONFIG_PLATFORM_ARM_RPI), y)
