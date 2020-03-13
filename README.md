@@ -1,5 +1,3 @@
-
-<<<<<<< HEAD
 # RTL8188EUS Driver
 [![Monitor mode](https://img.shields.io/badge/monitor%20mode-supported-brightgreen.svg)](#) [![Frame injection](https://img.shields.io/badge/frame%20injection-supported-brightgreen)](#) [![MESH Mode](https://img.shields.io/badge/mesh%20mode-supported-brightgreen.svg)](#) [![aircrack-ng](https://img.shields.io/badge/aircrack--ng-supported-blue.svg)](#) [![android](https://img.shields.io/badge/android-supported-blue.svg)](#) [![NetHUNTER](https://img.shields.io/badge/NetHUNTER-supported-red.svg)](#) [![LICENSE-GPL](https://img.shields.io/badge/license-GPL--v3.0-orange)](https://github.com/zexceed12300/rtl8188eus/blob/master/LICENSE)
 
@@ -42,34 +40,6 @@ export CROSS_COMPILE=aarch64-linux-gnu-
 export KLIB_BUILD=../kernel-headers
 ```
 arm64 is my Redmi 5 device architecture. CROSS_COMPILE is toolchain(aarch64-linux-gnu- for arm64, arm-linux-gnueabihf for arm)
-=======
-# Realtek rtl8188eus &amp; rtl8188eu &amp; rtl8188etv WiFi drivers
-
-[![Monitor mode](https://img.shields.io/badge/monitor%20mode-supported-brightgreen.svg)](#)
-[![Frame Injection](https://img.shields.io/badge/frame%20injection-supported-brightgreen.svg)](#)
-[![MESH Mode](https://img.shields.io/badge/mesh%20mode-supported-brightgreen.svg)](#)
-[![GitHub issues](https://img.shields.io/github/issues/aircrack-ng/rtl8188eus.svg)](https://github.com/aircrack-ng/rtl8188eus/issues)
-[![GitHub forks](https://img.shields.io/github/forks/aircrack-ng/rtl8188eus.svg)](https://github.com/aircrack-ng/rtl8188eus/network)
-[![GitHub stars](https://img.shields.io/github/stars/aircrack-ng/rtl8188eus.svg)](https://github.com/aircrack-ng/rtl8188eus/stargazers)
-[![GitHub license](https://img.shields.io/github/license/aircrack-ng/rtl8812au.svg)](https://github.com/aircrack-ng/rtl8188eus/blob/master/LICENSE)<br>
-[![Android](https://img.shields.io/badge/android%20(8)-supported-brightgreen.svg)](#)
-[![aircrack-ng](https://img.shields.io/badge/aircrack--ng-supported-blue.svg)](#)
-
-
-# Supports
-* Android 7
-* MESH Support
-* Monitor mode
-* Frame injection
-* Up to kernel v5.3+
-... And a bunch of various wifi chipsets
-
-# Howto build/install
-1. You will need to blacklist another driver in order to use this one.
-2. "echo "blacklist r8188eu" > "/etc/modprobe.d/realtek.conf"
-3. "make && make install"<br>
-4. Reboot in order to blacklist and load the new driver/module.
->>>>>>> ede09706b622f546685cd54b19643f0ebb35f0d1
 
 and type this command to build this driver: 
 ```
@@ -112,13 +82,3 @@ plugins=keyfile
 [keyfile]
 unmanaged-devices=mac:A7:A7:A7:A7:A7
 ```
-<<<<<<< HEAD
-=======
-
-# Credits
-Realtek       - https://www.realtek.com<br>
-Alfa Networks - https://www.alfa.com.tw<br>
-aircrack-ng.  - https://www.aircrack-ng.org<br>
-<br>
-And all those who may be using or contributing to it of anykind. Thanks!<br>
->>>>>>> ede09706b622f546685cd54b19643f0ebb35f0d1
