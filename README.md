@@ -15,8 +15,7 @@ CONFIG_CFG80211_WEXT (wireless extension compability)
 CONFIG_MAC80211 (IEEE 802.11 Networking Stack)
 ```
 2. Download your source kernel. (example for Redmi 5: https://github.com/aragon12/android_kernel_xiaomi_msm8953)
-## Build Kernel Headers
-if you have built the kernel and followed the steps, Let's Start!. 
+## Build Kernel Headers 
 ```
 cd kernel-source
 mkdir ../kernel-headers
