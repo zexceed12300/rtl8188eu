@@ -2367,7 +2367,6 @@ static int cfg80211_rtw_change_iface(struct wiphy *wiphy,
 	case NL80211_IFTYPE_P2P_CLIENT:
 		is_p2p = _TRUE;
 	#endif
-	__attribute__ ((__fallthrough__));
 	case NL80211_IFTYPE_STATION:
 		networkType = Ndis802_11Infrastructure;
 
@@ -2392,7 +2391,6 @@ static int cfg80211_rtw_change_iface(struct wiphy *wiphy,
 	case NL80211_IFTYPE_P2P_GO:
 		is_p2p = _TRUE;
 	#endif
-	__attribute__ ((__fallthrough__));
 	case NL80211_IFTYPE_AP:
 		networkType = Ndis802_11APMode;
 
@@ -5252,16 +5250,23 @@ exit:
 	return ret;
 }
 
-static int	cfg80211_rtw_del_station(struct wiphy *wiphy, struct net_device *ndev,
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 16, 0))
-	u8 *mac
-#elif (LINUX_VERSION_CODE < KERNEL_VERSION(3, 19, 0))
-	const u8 *mac
+    static int	cfg80211_rtw_del_station(struct wiphy *wiphy, 
+                                         struct net_device *ndev, 
+                                         u8 *mac)
+#elif (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
+	static int	cfg80211_rtw_del_station(struct wiphy *wiphy, 
+                                         struct net_device *ndev, 
+                                         const u8 *mac)
 #else
-	struct station_del_parameters *params
+	static int	cfg80211_rtw_del_station(struct wiphy *wiphy, 
+                                         struct net_device *ndev, 
+                                         struct station_del_parameters *params)
 #endif
-)
 {
+    #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 16, 0))
+        const u8 *mac = params->mac;
+    #endif
 	int ret = 0;
 	_irqL irqL;
 	_list	*phead, *plist;
@@ -5272,7 +5277,7 @@ static int	cfg80211_rtw_del_station(struct wiphy *wiphy, struct net_device *ndev
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	struct sta_priv *pstapriv = &padapter->stapriv;
 
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 19, 0))
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
 	target_mac = mac;
 #else
 	target_mac = params->mac;
