@@ -4,7 +4,7 @@
 This is Forked From https://github.com/aircrack-ng/rtl8188eus, no changes only bug fixes, this must be the newest, most stable and effective one.
 
 # How To Build For Android/Nethunter
-## PREPARING
+## Preparing
 1. Your kernel should enabled below. check in /proc/config.gz
 ```
 CONFIG_MODULES (loadable module support)
