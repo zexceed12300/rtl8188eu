@@ -24,23 +24,23 @@ make O=../kernel-headers modules_prepare
 ```
 You can get your kernel defconfig in /proc/config.gz (extracted) and place in [your kernel source directory]/arch/[your device architecture]/configs/ and rename as someone_defconfig.
 ## Build RTL8188EUS driver/modules
-clone this driver repository:
+#### Download driver RTL8188EUS
 ```
 cd ../
 git clone https://github.com/zexceed12300/rtl8188eus
 cd rtl8188eus
 ```
-
-now follow this command:
+#### Set up Environtment Variable
 ```
 export ARCH=arm64
 export SUBARCH=arm64
 export CROSS_COMPILE=aarch64-linux-gnu-
 export KLIB_BUILD=../kernel-headers
 ```
-arm64 is my Redmi 5 device architecture. CROSS_COMPILE is toolchain(aarch64-linux-gnu- for arm64, arm-linux-gnueabihf for arm)
-
-and type this command to build this driver: 
+ARCH and SUBARCH is your device architecture. 
+CROSS_COMPILE is GCC Toolchain(aarch64-linux-gnu- for arm64, arm-linux-gnueabihf for arm).
+KLIB_BUILD is path to kernel headers.
+#### Compile all module 
 ```
 make
 ```
