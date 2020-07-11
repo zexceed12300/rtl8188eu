@@ -5250,23 +5250,10 @@ exit:
 	return ret;
 }
 
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 16, 0))
-    static int	cfg80211_rtw_del_station(struct wiphy *wiphy, 
-                                         struct net_device *ndev, 
-                                         u8 *mac)
-#elif (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
-	static int	cfg80211_rtw_del_station(struct wiphy *wiphy, 
-                                         struct net_device *ndev, 
-                                         const u8 *mac)
-#else
-	static int	cfg80211_rtw_del_station(struct wiphy *wiphy, 
-                                         struct net_device *ndev, 
-                                         struct station_del_parameters *params)
-#endif
+static int cfg80211_rtw_del_station(struct wiphy *wiphy, 
+                                    struct net_device *ndev, 
+                                    struct station_del_parameters *params)
 {
-    #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 16, 0))
-        const u8 *mac = params->mac;
-    #endif
 	int ret = 0;
 	_irqL irqL;
 	_list	*phead, *plist;
@@ -5277,11 +5264,7 @@ exit:
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	struct sta_priv *pstapriv = &padapter->stapriv;
 
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
-	target_mac = mac;
-#else
 	target_mac = params->mac;
-#endif
 
 	RTW_INFO("+"FUNC_NDEV_FMT" mac=%pM\n", FUNC_NDEV_ARG(ndev), target_mac);
 
