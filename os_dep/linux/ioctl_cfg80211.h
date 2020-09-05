@@ -167,6 +167,10 @@ struct rtw_wdev_priv {
 	bool block;
 	bool block_scan;
 	bool power_mgmt;
+    
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,8,0)
+	u32 mgmt_mask;
+	#endif
 
 	/* report mgmt_frame registered */
 	u16 report_mgmt;
@@ -358,7 +362,7 @@ void rtw_cfg80211_deinit_rfkill(struct wiphy *wiphy);
 
 #define rtw_cfg80211_connect_result(wdev, bssid, req_ie, req_ie_len, resp_ie, resp_ie_len, status, gfp) cfg80211_connect_result(wdev_to_ndev(wdev), bssid, req_ie, req_ie_len, resp_ie, resp_ie_len, status, gfp)
 
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0))
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 2, 0))
 #define rtw_cfg80211_disconnected(wdev, reason, ie, ie_len, locally_generated, gfp) cfg80211_disconnected(wdev_to_ndev(wdev), reason, ie, ie_len, gfp)
 #else
 #define rtw_cfg80211_disconnected(wdev, reason, ie, ie_len, locally_generated, gfp) cfg80211_disconnected(wdev_to_ndev(wdev), reason, ie, ie_len, locally_generated, gfp)

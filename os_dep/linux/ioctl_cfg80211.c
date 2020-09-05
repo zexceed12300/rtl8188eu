@@ -686,14 +686,12 @@ static int rtw_cfg80211_sync_iftype(_adapter *adapter)
 
 static u64 rtw_get_systime_us(void)
 {
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 39))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 39) && LINUX_VERSION_CODE < KERNEL_VERSION(4, 20, 0))
 	struct timespec ts;
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 20, 0))
-	getboottime(&ts);
-#else
 	get_monotonic_boottime(&ts);
-#endif
 	return ((u64)ts.tv_sec * 1000000) + ts.tv_nsec / 1000;
+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 20, 0))
+	return ktime_to_us(ktime_get_boottime());
 #else
 	struct timeval tv;
 	do_gettimeofday(&tv);
@@ -5250,9 +5248,15 @@ exit:
 	return ret;
 }
 
-static int cfg80211_rtw_del_station(struct wiphy *wiphy, 
-                                    struct net_device *ndev, 
-                                    struct station_del_parameters *params)
+static int	cfg80211_rtw_del_station(struct wiphy *wiphy, struct net_device *ndev,
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 16, 0))
+	u8 *mac
+#elif (LINUX_VERSION_CODE < KERNEL_VERSION(3, 19, 0))
+	const u8 *mac
+#else
+	struct station_del_parameters *params
+#endif
+)
 {
 	int ret = 0;
 	_irqL irqL;
@@ -5264,7 +5268,11 @@ static int cfg80211_rtw_del_station(struct wiphy *wiphy,
 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
 	struct sta_priv *pstapriv = &padapter->stapriv;
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 19, 0))
+	target_mac = mac;
+#else
 	target_mac = params->mac;
+#endif
 
 	RTW_INFO("+"FUNC_NDEV_FMT" mac=%pM\n", FUNC_NDEV_ARG(ndev), target_mac);
 
@@ -7078,6 +7086,7 @@ exit:
 	return ret;
 }
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 8, 0))
 static void cfg80211_rtw_mgmt_frame_register(struct wiphy *wiphy,
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0))
 	struct wireless_dev *wdev,
@@ -7085,7 +7094,17 @@ static void cfg80211_rtw_mgmt_frame_register(struct wiphy *wiphy,
 	struct net_device *ndev,
 #endif
 	u16 frame_type, bool reg)
+#else
+static void cfg80211_rtw_update_mgmt_frame_register(struct wiphy *wiphy,
+						    struct wireless_dev *wdev,
+						    struct mgmt_frame_regs *upd)
+#endif
+
 {
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 8, 0))
+	u32 rtw_mask = BIT(IEEE80211_STYPE_PROBE_REQ >> 4);
+#endif
+    
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0))
 	struct net_device *ndev = wdev_to_ndev(wdev);
 #endif
@@ -7100,13 +7119,18 @@ static void cfg80211_rtw_mgmt_frame_register(struct wiphy *wiphy,
 	pwdev_priv = adapter_wdev_data(adapter);
 
 #ifdef CONFIG_DEBUG_CFG80211
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 8, 0))
 	RTW_INFO(FUNC_ADPT_FMT" frame_type:%x, reg:%d\n", FUNC_ADPT_ARG(adapter),
 		frame_type, reg);
+#else
+	RTW_INFO(FUNC_ADPT_FMT " old_regs:%x new_regs:%x\n",
+		 FUNC_ADPT_ARG(adapter), pwdev_priv->mgmt_mask, upd->interface_stypes);
+#endif    
 #endif
 
 	/* Wait QC Verify */
 	return;
-
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 8, 0))
 	switch (frame_type) {
 	case IEEE80211_STYPE_PROBE_REQ: /* 0x0040 */
 		SET_CFG80211_REPORT_MGMT(pwdev_priv, IEEE80211_STYPE_PROBE_REQ, reg);
@@ -7117,7 +7141,13 @@ static void cfg80211_rtw_mgmt_frame_register(struct wiphy *wiphy,
 	default:
 		break;
 	}
+#else
+	if ((upd->interface_stypes & rtw_mask) == (pwdev_priv->mgmt_mask & rtw_mask))
+ 		return;
 
+	pwdev_priv->mgmt_mask = upd->interface_stypes;
+#endif
+	
 exit:
 	return;
 }
@@ -8911,6 +8941,23 @@ static void rtw_cfg80211_init_vht_capab(_adapter *padapter
 }
 #endif /* defined(CONFIG_80211AC_VHT) && (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 6, 0)) */
 
+static void rtw_cfg80211_create_vht_cap(struct ieee80211_sta_vht_cap *vht_cap)
+{
+	u16 mcs_map;
+	int i;
+
+	vht_cap->vht_supported = 1;
+	vht_cap->cap = IEEE80211_VHT_CAP_RXLDPC;
+
+	mcs_map = 0;
+	for (i = 0; i < 8; i++) {
+		mcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << (i*2);
+	}
+
+	vht_cap->vht_mcs.rx_mcs_map = cpu_to_le16(mcs_map);
+	vht_cap->vht_mcs.tx_mcs_map = cpu_to_le16(mcs_map);
+}
+
 void rtw_cfg80211_init_wdev_data(_adapter *padapter)
 {
 #ifdef CONFIG_CONCURRENT_MODE
@@ -8937,6 +8984,7 @@ void rtw_cfg80211_init_wiphy(_adapter *padapter)
 		if (band) {
 			#if defined(CONFIG_80211N_HT)
 			rtw_cfg80211_init_ht_capab(padapter, &band->ht_cap, BAND_ON_2_4G, rf_type);
+			rtw_cfg80211_create_vht_cap(&band->vht_cap);
 			#endif
 		}
 	}
@@ -9404,7 +9452,11 @@ static struct cfg80211_ops rtw_cfg80211_ops = {
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) || defined(COMPAT_KERNEL_RELEASE)
 	.mgmt_tx = cfg80211_rtw_mgmt_tx,
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 8, 0))	
 	.mgmt_frame_register = cfg80211_rtw_mgmt_frame_register,
+#else
+	.update_mgmt_frame_registrations = cfg80211_rtw_update_mgmt_frame_register,
+#endif
 #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 34) && LINUX_VERSION_CODE <= KERNEL_VERSION(2, 6, 35))
 	.action = cfg80211_rtw_mgmt_tx,
 #endif
