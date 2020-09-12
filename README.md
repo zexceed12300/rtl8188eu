@@ -4,25 +4,34 @@
 This is Forked From https://github.com/aircrack-ng/rtl8188eus, no changes only bug fixes, this must be the newest, most stable and effective one.
 
 # How To Build For Android/Nethunter
-## Preparing
-1. Your kernel should enabled below. check in /proc/config.gz
+## Compile your own kernel
+Download your device source kernel. (example for Redmi 5: https://github.com/zexceed12300/android_kernel_xiaomi_rosy-3.18) & Download gcc toolchains
 ```
-CONFIG_MODULES (loadable module support)
-CONFIG_MODULE_FORCE_LOAD (forced module loading)
-CONFIG_MODULE_UNLOAD (module unloading)
-CONFIG_MODULE_FORCE_UNLOAD (forced module loading)
-CONFIG_CFG80211_WEXT (wireless extension compability)
-CONFIG_MAC80211 (IEEE 802.11 Networking Stack)
+git clone https://github.com/zexceed12300/android_kernel_xiaomi_rosy-3.18
+git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b ndk-release-r16
 ```
-2. Download your source kernel. (example for Redmi 5: https://github.com/aragon12/android_kernel_xiaomi_msm8953)
-## Build Kernel Headers 
+### Prepare for compiling kernel
 ```
-cd kernel-source
-mkdir ../kernel-headers
-make O=../kernel-headers someone_defconfig
-make O=../kernel-headers modules_prepare
+cd android_kernel_xiaomi_rosy-3.18
+export ARCH=arm64
+export CROSS_COMPILE=../aarch64-linux-android-4.9/bin/aarch64-linux-android-
+mkdir ../out
+make O=../out someone_defconfig
 ```
-You can get your kernel defconfig in /proc/config.gz (extracted) and place in [your kernel source directory]/arch/[your device architecture]/configs/ and rename as someone_defconfig.
+edit ../out/.config and make sure below has already there. if not there, you can add it
+```
+CONFIG_MODULES=y
+CONFIG_MODULE_FORCE_LOAD=y
+CONFIG_MODULE_UNLOAD=y
+CONFIG_MODULE_FORCE_UNLOAD=y
+CONFIG_CFG80211_WEXT=y
+CONFIG_MAC80211=y
+```
+### Compiling kernel
+```
+make O=../out -j$(nproc)
+```
+now your kernel(Image.gz-dtb) is in android_kernel_xiaomi_rosy-3.18/arch/arm64/boot/ and flash it to your device
 ## Build RTL8188EUS driver/modules
 #### Download driver RTL8188EUS
 ```
@@ -30,18 +39,9 @@ cd ../
 git clone https://github.com/zexceed12300/rtl8188eus
 cd rtl8188eus
 ```
-#### Set up Environtment Variable
-```
-export ARCH=arm64
-export SUBARCH=arm64
-export CROSS_COMPILE=aarch64-linux-gnu-
-export KLIB_BUILD=../kernel-headers
-```
-ARCH and SUBARCH is your device architecture. 
-CROSS_COMPILE is GCC Toolchain(aarch64-linux-gnu- for arm64, arm-linux-gnueabihf for arm).
-KLIB_BUILD is path to kernel headers.
 #### Compile all module 
 ```
+export KLIB_BUILD=../out
 make
 ```
 if there is no error or success you will see a file named 8188eu.ko in this driver directory. 
