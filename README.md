@@ -4,7 +4,7 @@
 This is Forked From https://github.com/aircrack-ng/rtl8188eus, no changes only bug fixes, this must be the newest, most stable and effective one.
 
 # How To Build For Android/Nethunter
-## Compile your own kernel
+## 1. Compile your own kernel
 Download your device source kernel. (example for Redmi 5: https://github.com/zexceed12300/android_kernel_xiaomi_rosy-3.18) & Download gcc toolchains
 ```
 git clone https://github.com/zexceed12300/android_kernel_xiaomi_rosy-3.18
@@ -32,7 +32,7 @@ CONFIG_MAC80211=y
 make O=../out -j$(nproc)
 ```
 now your kernel(Image.gz-dtb) is in android_kernel_xiaomi_rosy-3.18/arch/arm64/boot/ and flash it to your device
-## Build RTL8188EUS driver/modules
+## 2. Build RTL8188EUS driver/modules
 #### Download driver RTL8188EUS
 ```
 cd ../
@@ -45,7 +45,8 @@ export KLIB_BUILD=../out
 make
 ```
 if there is no error or success you will see a file named 8188eu.ko in this driver directory. 
-## Load the 8188eu.ko
+## 3. Load the Driver
+move 8188eu.ko to your device. open terminal and type
 ```
 su
 insmod 8188eu.ko
