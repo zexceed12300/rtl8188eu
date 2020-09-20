@@ -1,7 +1,7 @@
 # RTL8188EUS Driver
 [![Monitor mode](https://img.shields.io/badge/monitor%20mode-supported-brightgreen.svg)](#) [![Frame injection](https://img.shields.io/badge/frame%20injection-supported-brightgreen)](#) [![MESH Mode](https://img.shields.io/badge/mesh%20mode-supported-brightgreen.svg)](#) [![aircrack-ng](https://img.shields.io/badge/aircrack--ng-supported-blue.svg)](#) [![android](https://img.shields.io/badge/android-supported-blue.svg)](#) [![NetHUNTER](https://img.shields.io/badge/NetHUNTER-supported-red.svg)](#) [![LICENSE-GPL](https://img.shields.io/badge/license-GPL--v3.0-orange)](https://github.com/zexceed12300/rtl8188eus/blob/master/LICENSE)
 
-This is Forked From https://github.com/aircrack-ng/rtl8188eus, this including bug fixes, error fix and other patch. This must be the newest, most stable and effective one.
+This is forked From https://github.com/aircrack-ng/rtl8188eus, this including bug fixes, error fix and other patch. This must be the newest, most stable and effective one.
 
 # How To Build For Android/Nethunter
 ## 1. Compile your own kernel
@@ -33,7 +33,7 @@ If not enabled already, add to your defconfig.
 ```
 make O=../out -j$(nproc)
 ```
-now your kernel(Image.gz-dtb) is in android_kernel_xiaomi_rosy-3.18/arch/arm64/boot/ and flash it to your device
+now your Kernel file(Image.gz-dtb or Image) is in android_kernel_xiaomi_rosy-3.18/arch/arm64/boot/ and flash it to your device.
 ## 2. Build RTL8188EUS driver/modules
 #### Download driver RTL8188EUS
 ```
@@ -46,15 +46,15 @@ cd rtl8188eus
 export KLIB_BUILD=../out
 make
 ```
-if there is no error or success you will see a file named 8188eu.ko in this driver directory. 
+If there is no error or success, you will see a file named 8188eu.ko in this driver directory. 
 ## 3. Load the Driver
 move 8188eu.ko to your device. open terminal and type
 ```
 su
 insmod 8188eu.ko
 ```
-Enjoy!! the driver has been loaded in your device, now you can plugged your wifi adapter(like TP-LINK TL-WN722N v2/v3) now.
-## HowTo Monitor mode
+Enjoy!! the driver has been loaded in your device, now you can plug your wifi adapter(like TP-LINK TL-WN722N v2/v3) in now.
+## How To Enable Monitor mode
 Use these steps to enter monitor mode.
 ```
 $ sudo airmon-ng check-kill
