@@ -5,7 +5,7 @@ This is forked From https://github.com/aircrack-ng/rtl8188eus, this including bu
 
 # How To Build For Android/Nethunter
 ## 1. Compile your own kernel
-Download your device source kernel. (example for Redmi 5: https://github.com/zexceed12300/android_kernel_xiaomi_rosy-3.18) & Download GCC toolchain (example for Google GCC 4.9)p
+Download your device source kernel. (example for Redmi 5: https://github.com/zexceed12300/android_kernel_xiaomi_rosy-3.18) & Download GCC toolchain (example for Google GCC 4.9).
 ```
 git clone https://github.com/zexceed12300/android_kernel_xiaomi_rosy-3.18
 git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b ndk-release-r16
