@@ -83,4 +83,4 @@ plugins=keyfile
 unmanaged-devices=mac:A7:A7:A7:A7:A7
 ```
 ## Tutorial
-[![Watch the video](https://ibb.co/DVrXtYj)](https://youtu.be/QYT7hsVqD-g)
+[![Watch the video](https://ibb.co/DVrXtYj/add-driver-tplink-wn722n-v2-v3-Kernel-Nethunter-Android-Thumbnail-2)](https://youtu.be/QYT7hsVqD-g)
