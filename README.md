@@ -83,4 +83,4 @@ plugins=keyfile
 unmanaged-devices=mac:A7:A7:A7:A7:A7
 ```
 ## Tutorial
-https://youtu.be/QYT7hsVqD-g
+[![Watch the video](https://ibb.co/DVrXtYj)](https://youtu.be/QYT7hsVqD-g)
